@@ -54,7 +54,7 @@
 .heroPanel {
   border-radius: 18px;
   border: 1px solid var(--border);
-  background: linear-gradient(145deg, var(--green-050), #ffffff);
+  background: var(--card-bg);
   box-shadow: var(--shadow);
   padding: 18px 18px 16px;
   display: flex;
@@ -112,7 +112,7 @@
 .columnCard {
   border-radius: 14px;
   border: 1px solid var(--border);
-  background: #fff;
+  background: var(--card-bg);
   padding: 18px 16px 16px;
   box-shadow: var(--shadow);
 }
