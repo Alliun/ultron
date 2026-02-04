@@ -49,9 +49,8 @@ export function DonationPage() {
     setShowCertificate(true)
   }
 
-  const handleDownloadCertificate = (certificateElement) => {
-    // In production, use html2canvas + jsPDF to generate PDF
-    alert('Certificate download feature will be implemented with PDF generation library')
+  const handleDownloadCertificate = () => {
+    // Certificate component now handles PDF generation internally
   }
 
   return (
@@ -159,7 +158,6 @@ export function DonationPage() {
         {showCertificate && completedDonation && (
           <DonationCertificate
             donation={completedDonation}
-            onDownload={handleDownloadCertificate}
             onClose={() => {
               setShowCertificate(false)
               navigate(`/ngo/${ngo.id}`)

@@ -1,17 +1,59 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 import styles from './DonationCertificate.module.css'
 
-export function DonationCertificate({ donation, onDownload, onClose }) {
+export function DonationCertificate({ donation, onClose }) {
   const certificateRef = useRef()
+  const [isGenerating, setIsGenerating] = useState(false)
 
   const generateQRCode = (data) => {
-    // Simple QR code placeholder - in production, use a QR library
     return `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(data)}`
   }
 
-  const handleDownload = () => {
-    // In production, use html2canvas or similar to generate PDF
-    if (onDownload) onDownload(certificateRef.current)
+  const handleDownload = async () => {
+    if (!certificateRef.current) return
+    
+    setIsGenerating(true)
+    try {
+      const canvas = await html2canvas(certificateRef.current, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff'
+      })
+      
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      })
+      
+      const imgWidth = 210
+      const pageHeight = 295
+      const imgHeight = (canvas.height * imgWidth) / canvas.width
+      let heightLeft = imgHeight
+      
+      let position = 0
+      
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+      heightLeft -= pageHeight
+      
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight
+        pdf.addPage()
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+        heightLeft -= pageHeight
+      }
+      
+      pdf.save(`donation-certificate-${donation.id}.pdf`)
+    } catch (error) {
+      console.error('Error generating PDF:', error)
+      alert('Error generating PDF. Please try again.')
+    } finally {
+      setIsGenerating(false)
+    }
   }
 
   const verificationData = {
@@ -117,8 +159,12 @@ export function DonationCertificate({ donation, onDownload, onClose }) {
         </div>
 
         <div className={styles.actions}>
-          <button onClick={handleDownload} className="btn btnPrimary">
-            📄 Download PDF
+          <button 
+            onClick={handleDownload} 
+            disabled={isGenerating}
+            className="btn btnPrimary"
+          >
+            {isGenerating ? '📄 Generating PDF...' : '📄 Download PDF'}
           </button>
           <button onClick={onClose} className="btn btnGhost">
             Close
