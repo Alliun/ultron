@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext.jsx'
+import { useNotifications } from '../../components/NotificationSystem/NotificationSystem.jsx'
 import { getNgoById } from '../../data/ngos.js'
 import { normalizeUrl } from '../../utils/urlHelpers.js'
 import { DonationCertificate } from '../../components/DonationCertificate/DonationCertificate.jsx'
@@ -10,6 +11,7 @@ export function DonationPage() {
   const { ngoId } = useParams()
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { addNotification } = useNotifications()
   const ngo = getNgoById(ngoId)
 
   const [donationAmount, setDonationAmount] = useState('')
@@ -18,6 +20,7 @@ export function DonationPage() {
   const [donationType, setDonationType] = useState('Money')
   const [showCertificate, setShowCertificate] = useState(false)
   const [completedDonation, setCompletedDonation] = useState(null)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   if (!ngo) {
     return (
@@ -31,22 +34,52 @@ export function DonationPage() {
 
   function handleSubmit(e) {
     e.preventDefault()
+    setIsProcessing(true)
     
-    // Create donation record
-    const donation = {
-      id: 'DON' + Date.now(),
-      amount: donationAmount,
-      ngoName: ngo.name,
-      ngoId: ngo.id,
-      donorName,
-      donorEmail,
-      donationType,
-      date: new Date().toISOString(),
-      status: 'completed'
-    }
+    // Show processing notification
+    addNotification({
+      type: 'info',
+      title: 'Processing Donation',
+      message: 'Please wait while we process your donation...'
+    })
     
-    setCompletedDonation(donation)
-    setShowCertificate(true)
+    // Simulate payment processing
+    setTimeout(() => {
+      const donation = {
+        id: 'DON' + Date.now(),
+        amount: donationAmount,
+        ngoName: ngo.name,
+        ngoId: ngo.id,
+        donorName,
+        donorEmail,
+        donationType,
+        date: new Date().toISOString(),
+        status: 'completed'
+      }
+      
+      setCompletedDonation(donation)
+      setIsProcessing(false)
+      
+      // Show success notification
+      addNotification({
+        type: 'donation',
+        title: 'Donation Successful!',
+        message: `Your ₹${donationAmount} donation to ${ngo.name} has been processed.`,
+        duration: 8000
+      })
+      
+      // Show impact notification
+      setTimeout(() => {
+        addNotification({
+          type: 'impact',
+          title: 'Your Impact',
+          message: `Your donation will provide ${Math.floor(donationAmount / 50)} meals to children in need!`,
+          duration: 10000
+        })
+      }, 2000)
+      
+      setShowCertificate(true)
+    }, 2000)
   }
 
   const handleDownloadCertificate = () => {
@@ -134,12 +167,17 @@ export function DonationPage() {
             </label>
 
             <div className={styles.actions}>
-              <button type="submit" className="btn btnPrimary">
-                Proceed to Payment
+              <button 
+                type="submit" 
+                disabled={isProcessing}
+                className={`btn btnPrimary ${isProcessing ? 'loading' : ''}`}
+              >
+                {isProcessing ? '💳 Processing...' : 'Proceed to Payment'}
               </button>
               <button
                 type="button"
                 className="btn btnGhost"
+                disabled={isProcessing}
                 onClick={() => navigate(`/ngo/${ngo.id}`)}
               >
                 Cancel
