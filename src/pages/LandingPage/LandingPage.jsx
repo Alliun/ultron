@@ -17,7 +17,7 @@ export function LandingPage() {
         <section className={styles.hero}>
           <div className={styles.heroInner}>
             <div className={styles.heroMain}>
-              <div className={styles.kicker}>Donation search made simple</div>
+              <div className={styles.kicker}>🎯 Donation search made simple</div>
               <h1 className={styles.title}>Find trusted NGOs and donation centers near you</h1>
               <p className={styles.subtitle}>
                 Aidconnect gently brings together local NGOs, shelters, and community centers in Chennai so you can decide where to
@@ -76,7 +76,8 @@ export function LandingPage() {
         )}
 
         <section className={styles.howItWorks}>
-          <h2 className={styles.sectionTitle}>A calm way to decide where to help</h2>
+          <h2 className={styles.sectionTitle}>How It Works</h2>
+          <p className={styles.sectionSubtitle}>A simple, transparent way to connect with trusted organizations</p>
           <div className={styles.columns}>
             <div className={styles.columnCard}>
               <div className={styles.columnTitle}>Browse by need</div>
