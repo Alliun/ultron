@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import styles from './LandingPage.module.css'
 import { getNgoById } from '../../data/ngos.js'
 import { NgoCard } from '../../components/NgoCard/NgoCard.jsx'
+import { DonationBanner } from '../../components/DonationBanner/DonationBanner.jsx'
+import { DisasterAlert } from '../../components/DisasterAlert/DisasterAlert.jsx'
 
 export function LandingPage() {
   // Top 2 NGOs in desperate need - Blue Cross of India and HelpAge India
@@ -10,6 +12,8 @@ export function LandingPage() {
   return (
     <main className="page">
       <div className="container">
+        <DisasterAlert />
+        
         <section className={styles.hero}>
           <div className={styles.heroInner}>
             <div className={styles.heroMain}>
@@ -56,6 +60,8 @@ export function LandingPage() {
             </div>
           </div>
         </section>
+
+        <DonationBanner />
 
         {topNgos.length > 0 && (
           <section className={styles.topNgos}>
