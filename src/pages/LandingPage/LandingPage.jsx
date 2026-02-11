@@ -17,11 +17,10 @@ export function LandingPage() {
         <section className={styles.hero}>
           <div className={styles.heroInner}>
             <div className={styles.heroMain}>
-              <div className={styles.kicker}>🎯 Donation search made simple</div>
-              <h1 className={styles.title}>Find trusted NGOs and donation centers near you</h1>
+              <div className={styles.kicker}>Empowering Compassionate Giving</div>
+              <h1 className={styles.title}>Discover Trusted NGOs and Make a Lasting Impact</h1>
               <p className={styles.subtitle}>
-                Aidconnect gently brings together local NGOs, shelters, and community centers in Chennai so you can decide where to
-                give time, goods, or funds.
+                Aidconnect connects you with verified local NGOs, shelters, and community centers in Chennai, enabling informed decisions on how to contribute your time, resources, or donations effectively.
               </p>
 
               <div className={styles.heroActions}>
